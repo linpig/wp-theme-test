@@ -14,9 +14,9 @@
 
   ?>
   <body <?php body_class( $knockers_classes );?>>
-    <div class="container">
+    <header class="container">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="">
           <nav class="navbar navbar-default">
             <div class="container-fluid">
               <div class="navbar-header">
@@ -47,7 +47,8 @@
 
 
         </div> -->
+        <div class="header_image ">
+          <img src="<?php header_image(); ?>" height="<?php echo get_custom_header()->height; ?>" width="<?php echo get_custom_header()->width;?>" alt="" />
+        </div>
       </div>
-
-
-    <img src="<?php header_image(); ?>" height="<?php echo get_custom_header()->height; ?>" width="<?php echo get_custom_header()->width;?>" alt="" />
+    </header>

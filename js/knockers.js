@@ -5,7 +5,10 @@ var app = new Vue({
     posts: [],
     filter: '',
     categories: [],
-    catFilter:''
+    catFilter:'',
+    showFilter:'',
+    openFilter1:true,
+    closeFilter1:''
   },
   created: function() {
     // var self = this
@@ -56,6 +59,17 @@ var app = new Vue({
       axios.get('/wp-json/wp/v2/categories')
         .then(response => response.data)
         .then(data => Vue.set(this, 'categories', data));
+
+    },
+    openFilter: function(){
+      this.showFilter=true
+      this.closeFilter1=true
+      this.openFilter1=false
+    },
+    closeFilter:function(){
+      this.showFilter=false
+      this.openFilter1=true
+      this.closeFilter1=false
 
     }
   },

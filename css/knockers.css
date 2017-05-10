@@ -7,3 +7,13 @@ html,body{
 body{
   padding:20px;
 }
+
+.header_image img{
+  width:100%;
+}
+
+.filter_wrap{
+  position: fixed;
+  top: 50%;
+  left:0px;
+}

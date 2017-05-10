@@ -1,6 +1,6 @@
 
 
-<footer>
+<footer class="container">
   <p>This is my footer</p>
 
   <?php

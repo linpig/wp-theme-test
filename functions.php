@@ -122,11 +122,13 @@ function home_post_listing_shortcode( $atts ) {
 
     ) );
     if ( $query->have_posts() ) { ?>
-        <ul class="info-listing">
+        <ul class="info-listing list-unstyled">
             <?php while ( $query->have_posts() ) : $query->the_post(); ?>
-            <li id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                
+            <li class="col-sm-4" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+
                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                <p><?php the_tags(); ?></p>
+
             </li>
             <?php endwhile;
             wp_reset_postdata(); ?>
