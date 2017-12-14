@@ -1,59 +1,37 @@
 <?php get_header();?>
 
-<div class="container">
+<div id="content" class="container content">
+
+  <h2><img class="img-responsive" src="/wp-content/themes/knockers/images/title.png" alt=""></h2>
   <div class="row">
-    <h2>shortcode list</h2>
-    <?php echo do_shortcode( '[list-posts-home]' ); ?>
+      <div class="col-sm-6 mt15">
+        <img class="img-responsive" src="/wp-content/themes/knockers/images/01.jpg" alt="">
+      </div>
+      <div class="col-sm-6 mt15">
+        <img class="img-responsive" src="/wp-content/themes/knockers/images/02.jpg" alt="">
+      </div>
+      <div class="col-sm-6 mt15">
+        <img class="img-responsive" src="/wp-content/themes/knockers/images/03.jpg" alt="">
+      </div>
+      <div class="col-sm-6 mt15">
+        <img class="img-responsive" src="/wp-content/themes/knockers/images/04.jpg" alt="">
+      </div>
   </div>
-
-    <div id="app" >
-
-
-          <div class="filter_wrap" >
-            <div class="filter" v-if="showFilter">
-              <h4>Filter by Name</h4>
-              <input type="text" name="" v-model="filter">
-            </div>
-
-            <div class="container">
-              <a @click="openFilter" v-if="openFilter1"  class="btn btn-primary open">開啟</a>
-              <a @click="closeFilter" v-if="closeFilter1" class="btn btn-danger closef">關閉</a>
-            </div>
-
-          </div>
-
-
-          <!-- <div class="by-category clearfix">
-            <h4>Filter by Category</h4>
-            <div class="radio-wrap">
-              <input type="radio" value="" v-model="catFilter">
-              <label for="">All</label>
-            </div>
-
-            <div class="radio-wrap" v-for="category in categories" v-if="category.name != '未分類'">
-                             <input type="radio" :value="category.id" :id="category.id" :name="category.name" v-model="catFilter" >
-                             <label :for='category.id'>{{ category.name }}</label>
-                         </div>
-          </div> -->
-
-        <h1 class="text-center">Vue.js抓取WordPress api</h1>
-        <div  class="wrap">
-            <article v-for="post in postFilter " class="col-sm-4 post" >
-
-              <a :href="post.link"><img :src="post.fi_medium" alt=""><h1>{{post.title.rendered}}</h1></a>
-              <small v-for="category in post.cats">
-                {{category.name}}
-              </small>
-              <span>{{post.date}}</span>
-              <p v-html="post.excerpt.rendered"></p>
-            </article>
-        </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <img class="img-responsive" src="/wp-content/themes/knockers/images/contact.png" alt="">
+    </div>
   </div>
-  <div class="">
-    <?php get_sidebar();?>
+  <div class="row">
+    <div class="col-xs-12">
+      <?php echo do_shortcode( '[contact-form-7 id="65" title="聯絡表單 1"]' );?>
+
+    </div>
   </div>
 </div>
 
+
+<!--/content-->
 
 
 

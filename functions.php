@@ -2,15 +2,14 @@
   function knockers_script_enqueue() {
     //引入css
     wp_enqueue_style('bootstrapcss', get_template_directory_uri() . '/css/bootstrap.min.css', array(),'1.0.0','all');
+    wp_enqueue_style('bxslidercss', get_template_directory_uri() . '/js/bxslider/jquery.bxslider.css', array(),'1.0.0','all');
     wp_enqueue_style('kkcss', get_template_directory_uri() . '/css/knockers.css', array(),'1.0.0','all');
     // 引入js
     wp_enqueue_script('jquery', get_template_directory_uri() . '/js/jquery-1.11.3.min.js', array(),'1.0.0',true);
-    wp_enqueue_script('vuejs', get_template_directory_uri() . '/js/vue.min.js', array(),'1.0.0',true);
-    wp_enqueue_script('axiosjs', get_template_directory_uri() . '/js/axios.min.js', array(),'1.0.0',true);
-    wp_enqueue_script('vueaxiosjs', get_template_directory_uri() . '/js/vue-axios.min.js', array(),'1.0.0',true);
-    wp_enqueue_script('router', get_template_directory_uri() . '/js/vue-router.min.js', array(),'1.0.0',true);
     wp_enqueue_script('bootstrapjs', get_template_directory_uri() . '/js/bootstrap.min.js', array(),'1.0.0',true);
-    wp_enqueue_script('customjs', get_template_directory_uri() . '/js/knockers.js', array(),'1.0.0',true);
+ wp_enqueue_script('matchheightjs', get_template_directory_uri() . '/js/jquery-match-height.js', array(),'1.0.0',true);    
+ wp_enqueue_script('bxsliderjs', get_template_directory_uri() . '/js/bxslider/jquery.bxslider.min.js', array(),'1.0.0',true);
+wp_enqueue_script('customjs', get_template_directory_uri() . '/js/knockers.js', array(),'1.0.0',true);
 
   }
   // 執行引入css js
@@ -107,9 +106,67 @@ function prepare_rest($data,$post,$request) {
 
 add_filter('rest_prepare_post', 'prepare_rest', 10,3);
 
-
+//首頁左邊slidr區塊
 add_shortcode( 'list-posts-home', 'home_post_listing_shortcode' );
 function home_post_listing_shortcode( $atts ) {
+// $url = get_the_post_thumbnail_url($post->ID);
+    ob_start();
+    $query = new WP_Query( array(
+        'post_type' => 'post',
+        'color' => 'blue',
+        'posts_per_page' => 6,
+        'order' => 'DSC',
+        'orderby' => 'title',
+	'category_name' =>'featured-case',
+
+    ) );
+    if ( $query->have_posts() ) { ?>
+            <?php while ( $query->have_posts() ) : $query->the_post(); ?>
+            <li class="bxslider_item" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+		<img src="<?php the_post_thumbnail_url(); ?>"/>
+                <h2><?php the_title(); ?></h2>
+                <p><?php the_content();?></p>
+
+            </li>
+            <?php endwhile;
+            wp_reset_postdata(); ?>
+    <?php $myvariable = ob_get_clean();
+    return $myvariable;
+    }
+}
+// 首頁右邊作品區塊
+add_shortcode( 'list-posts-right-block', 'home_rigth_post_listing_shortcode' );
+function home_rigth_post_listing_shortcode( $atts ) {
+// $url = get_the_post_thumbnail_url($post->ID);
+    ob_start();
+    $query = new WP_Query( array(
+        'post_type' => 'post',
+        'color' => 'blue',
+        'posts_per_page' => 4,
+        'order' => 'DSC',
+        'orderby' => 'title',
+        'category_name' =>'featured-case',
+
+    ) );
+    if ( $query->have_posts() ) { ?>
+            <?php while ( $query->have_posts() ) : $query->the_post(); ?>
+            <li class="mt15  right_block_item row" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                <div class="col-sm-4  item_img"><img src="<?php the_post_thumbnail_url(); ?>"/></div>
+                <div class="item_content col-sm-8" >
+		<h2><?php the_title(); ?></h2>
+                <p><?php the_content();?></p>
+		</div>
+
+            </li>
+            <?php endwhile;
+            wp_reset_postdata(); ?>
+    <?php $myvariable = ob_get_clean();
+    return $myvariable;
+    }
+}
+//首頁下方夥伴與客戶區塊
+add_shortcode( 'home_p_and_c_block', 'home_p_and_c_post_listing_shortcode' );
+function home_p_and_c_post_listing_shortcode( $atts ) {
 // $url = get_the_post_thumbnail_url($post->ID);
     ob_start();
     $query = new WP_Query( array(
@@ -118,22 +175,119 @@ function home_post_listing_shortcode( $atts ) {
         'posts_per_page' => -1,
         'order' => 'DSC',
         'orderby' => 'title',
-        'tag'=>'專案A,專案B'
+        'category_name' =>'p-and-c',
 
     ) );
     if ( $query->have_posts() ) { ?>
-        <ul class="info-listing list-unstyled">
             <?php while ( $query->have_posts() ) : $query->the_post(); ?>
-            <li class="col-sm-4" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
-                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                <p><?php the_tags(); ?></p>
-
+            <li class="col-sm-2 col-xs-6 mt15" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                <div class="p_and_c_img"><img class="img-circle img-responsive" src="<?php the_post_thumbnail_url(); ?>"/></div>
             </li>
             <?php endwhile;
             wp_reset_postdata(); ?>
-        </ul>
     <?php $myvariable = ob_get_clean();
     return $myvariable;
     }
 }
+
+
+
+
+// code生成post
+function wporg_custom_post_type()
+{
+    register_post_type('wporg_product',
+                       [
+                           'labels'      => [
+                               'name'          => __('Products'),
+                               'singular_name' => __('Product'),
+                           ],
+                           'public'      => true,
+                           'has_archive' => true,
+                       ]
+    );
+}
+add_action('init', 'wporg_custom_post_type');
+
+// code 建立分類
+function wporg_register_taxonomy_course()
+{
+    $labels = [
+        'name'              => _x('Courses', 'taxonomy general name'),
+'singular_name'     => _x('Course', 'taxonomy singular name'),
+'search_items'      => __('Search Courses'),
+'all_items'         => __('All Courses'),
+'parent_item'       => __('Parent Course'),
+'parent_item_colon' => __('Parent Course:'),
+'edit_item'         => __('Edit Course'),
+'update_item'       => __('Update Course'),
+'add_new_item'      => __('Add New Course'),
+'new_item_name'     => __('New Course Name'),
+'menu_name'         => __('Course'),
+];
+$args = [
+'hierarchical'      => true, // make it hierarchical (like categories)
+'labels'            => $labels,
+'show_ui'           => true,
+'show_admin_column' => true,
+'query_var'         => true,
+'rewrite'           => ['slug' => 'course'],
+];
+register_taxonomy('course', ['wporg_product'], $args);
+}
+add_action('init', 'wporg_register_taxonomy_course');
+
+
+//改寫content block & only_img
+function knockers_custom_post_widget_shortcode($atts) {
+        extract(shortcode_atts(array(
+                'id' => '',
+                'slug' => '',
+                'class' => 'content_block',
+                'suppress_content_filters' => 'yes',
+                'title' => 'no',
+                'title_tag' => 'h3',
+                'only_img' => 'no',
+        ), $atts));
+
+        if ($slug) {
+                $block = get_page_by_path($slug, OBJECT, 'content_block');
+                if ($block) {
+                        $id = $block->ID;
+                }
+        }
+
+        $content = "";
+
+        if ($id != "") {
+                $args = array(
+                        'post__in' => array($id),
+                        'post_type' => 'content_block',
+                );
+
+                $content_post = get_posts($args);
+
+                foreach ($content_post as $post):
+                        $content .= '<div class="' . esc_attr($class) . '" id="custom_post_widget-' . $id . '">';
+                        if ($title === 'yes') {
+                                $content .= '<' . esc_attr($title_tag) . '>' . $post->post_title . '</' . esc_attr($title_tag) . '>';
+                        }
+                        if ($suppress_content_filters === 'no') {
+                                $content .= apply_filters('the_content', $post->post_content);
+                        } else {
+                                if (has_shortcode($post->post_content, 'content_block') || has_shortcode($post->post_content, 'ks_content_block')) {
+                                        $content .= $post->post_content;
+                                } else {
+                                        $content .= do_shortcode($post->post_content);
+                                }
+                        }
+                        $content .= '</div>';
+                endforeach;
+        }
+        if ($only_img == "yes") {
+                $featured_image = get_the_post_thumbnail_url($id, 'full');
+                return $featured_image ? $featured_image : $content;
+        }
+        return $content;
+}
+add_shortcode('ks_content_block', 'knockers_custom_post_widget_shortcode');
